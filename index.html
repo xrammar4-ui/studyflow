@@ -337,11 +337,32 @@
 
       <!-- Messages -->
       <div class="page-view hidden" id="page-messages" style="padding:0">
-        <div class="empty-state" style="min-height:calc(100vh - 60px);display:flex;flex-direction:column;align-items:center;justify-content:center">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="52" height="52" style="opacity:0.35;margin-bottom:1rem"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          <h3>No conversations yet</h3>
-          <p class="text-sm" style="margin-top:0.3rem">Search for developers and start a chat</p>
-          <button class="btn btn-outline btn-sm" style="margin-top:1rem" onclick="openSearch()">Find developers</button>
+        <div class="chat-layout" id="chat-layout">
+          <div class="chat-list" id="chat-list-panel">
+            <div class="chat-list-header">Chats</div>
+            <div id="chat-conversations"></div>
+          </div>
+          <div class="chat-main" id="chat-main-panel">
+            <div id="chat-placeholder" class="empty-state" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="52" height="52" style="opacity:0.35;margin-bottom:1rem"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              <h3>Select a chat</h3>
+              <p class="text-sm" style="margin-top:0.3rem">Open a friend from the list to message</p>
+            </div>
+            <div id="chat-active" class="hidden" style="display:none;flex-direction:column;height:100%">
+              <div class="chat-header">
+                <img class="avatar" id="chat-peer-avatar" src="" alt="" />
+                <div style="flex:1;min-width:0">
+                  <div style="font-weight:600" id="chat-peer-name">—</div>
+                  <div class="text-xs" id="chat-peer-status">offline</div>
+                </div>
+              </div>
+              <div class="chat-messages wa-messages" id="chat-messages"></div>
+              <div class="chat-input-area">
+                <textarea class="chat-input" id="chat-input" rows="1" placeholder="Type a message" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage();}"></textarea>
+                <button class="btn btn-primary" onclick="sendChatMessage()">Send</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -565,6 +586,7 @@
   </div>
 
   <div class="toast-container" id="toast-container"></div>
+  <script src="js/chat.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
