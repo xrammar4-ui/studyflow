@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevFlow — Focus. Ship. Connect.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ========== LANDING ========== -->
+  <div class="landing" id="landing">
+    <nav class="landing-nav">
+      <a href="#" class="logo">
+        <img class="logo-icon" src="assets/logo.png" alt="DevFlow" />
+        <div class="logo-text">DevFlow</div>
+      </a>
+      <div style="display:flex;gap:0.6rem">
+        <button class="btn btn-ghost btn-sm" onclick="openModal('modal-auth')">Sign in</button>
+        <button class="btn btn-primary btn-sm" onclick="enterGuest()">Get started</button>
+      </div>
+    </nav>
+
+    <div class="landing-hero">
+      <div class="landing-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Built for developers who ship
+      </div>
+      <h1>Schedule deep work.<br><span>Stay in flow.</span></h1>
+      <p>Task scheduling, focus timers, smart reminders, and a private developer network — all in one place.</p>
+      <div class="landing-cta">
+        <button class="btn btn-primary btn-lg" onclick="enterGuest()">Start for free</button>
+        <button class="btn btn-outline btn-lg" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See features</button>
+      </div>
+    </div>
+
+    <div class="landing-features" id="features">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <h3>Scheduled Tasks</h3>
+        <p class="text-sm text-secondary" style="margin-top:0.4rem">Set exact start times. Get notified. Start coding with one click.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Focus Engine</h3>
+        <p class="text-sm text-secondary" style="margin-top:0.4rem">Deep work sessions with a clean timer, distraction logging, and zen mode.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h3>Developer Network</h3>
+        <p class="text-sm text-secondary" style="margin-top:0.4rem">Find peers, send friend requests, message, and share tasks privately.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== APP ========== -->
+  <div class="app-shell" id="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="logo" onclick="navigate('dashboard'); return false;">
+          <img class="logo-icon" src="assets/logo.png" alt="DevFlow" />
+          <div class="logo-text">DevFlow</div>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-nav="dashboard" onclick="navigate('dashboard')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-item" data-nav="tasks" onclick="navigate('tasks')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Tasks
+        </button>
+        <button class="nav-item" data-nav="focus" onclick="navigate('focus')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Focus Engine
+        </button>
+        <button class="nav-item" data-nav="analytics" onclick="navigate('analytics')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          Analytics
+        </button>
+        <button class="nav-item" data-nav="messages" onclick="navigate('messages')" style="position:relative">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Messages
+          <span class="nav-badge hidden" id="msg-badge">0</span>
+        </button>
+        <button class="nav-item" data-nav="profile" onclick="handleProfileClick()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-mini" onclick="handleProfileClick()">
+          <img class="avatar" id="sidebar-user-avatar" src="" alt="" />
+          <div style="min-width:0">
+            <div class="text-sm" style="font-weight:600" id="sidebar-user-name">—</div>
+            <div class="text-xs text-muted truncate" id="sidebar-user-handle">@—</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <header class="topbar">
+        <div class="search-trigger" onclick="openSearch()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          Search developers...
+          <span style="margin-left:auto;font-size:0.72rem;opacity:0.5">⌘K</span>
+        </div>
+        <div class="topbar-actions">
+          <div class="coin-badge" title="Coins">
+            <svg class="coin-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5"/>
+              <circle cx="12" cy="12" r="7" fill="none" stroke="#B45309" stroke-width="1" opacity="0.5"/>
+              <text x="12" y="16" text-anchor="middle" font-size="11" font-weight="700" fill="#78350F" font-family="system-ui">$</text>
+            </svg>
+            <span class="coin-value">0</span>
+          </div>
+          <div class="relative">
+            <button class="icon-btn" id="notif-btn" onclick="toggleNotifPanel()" title="Notifications">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+              <span class="badge hidden" id="notif-badge">0</span>
+            </button>
+            <div class="notif-panel" id="notif-panel">
+              <div class="notif-header">Notifications</div>
+              <div id="notif-list"></div>
+            </div>
+          </div>
+
+        </div>
+      </header>
+
+      <!-- Dashboard -->
+      <div class="page-content page-view" id="page-dashboard">
+        <div class="section-header">
+          <div>
+            <h1 id="dash-greeting">Dashboard</h1>
+            <p class="text-secondary text-sm" style="margin-top:0.2rem" id="dash-subtitle">Your productivity overview</p>
+          </div>
+
+        </div>
+
+        <div class="stats-row">
+          <div class="glass-card stat-card">
+            <div class="stat-value" id="stat-completed">0</div>
+            <div class="stat-label">Tasks completed</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-value" id="stat-focus-today">0m</div>
+            <div class="stat-label">Focus today</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-value" id="stat-streak">0</div>
+            <div class="stat-label">Day streak</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-value" id="stat-ontime">—</div>
+            <div class="stat-label">On-time rate</div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div>
+            <div class="section-header">
+              <h2>Today's schedule</h2>
+              <button class="btn btn-ghost btn-sm" onclick="navigate('tasks')">View all</button>
+            </div>
+            <div class="task-list" id="task-list"></div>
+
+            <div class="section-header" style="margin-top:1.75rem">
+              <h2>Recent activity</h2>
+            </div>
+            <div class="glass-card" id="activity-feed" style="padding:0.25rem 0">
+              <div class="empty-state" style="padding:2rem 1rem">
+                <p class="text-sm">No activity yet. Complete a task to see it here.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:1rem">
+            <div class="glass-card" style="padding:1.25rem">
+              <h3 style="margin-bottom:0.35rem">Next up</h3>
+              <p class="text-sm text-muted" id="next-up-text" style="margin-bottom:1rem">Nothing scheduled</p>
+              <div id="next-up-actions" style="display:none;gap:0.5rem;flex-wrap:wrap">
+                <button class="btn btn-primary btn-sm" id="next-up-start">Start now</button>
+                <button class="btn btn-outline btn-sm" id="next-up-snooze">Snooze 15m</button>
+              </div>
+            </div>
+
+            <div class="glass-card" style="padding:1.25rem">
+              <h3 style="margin-bottom:0.85rem">Focus this week</h3>
+              <div style="display:flex;align-items:flex-end;gap:5px;height:72px" id="week-bars">
+                <div class="week-bar" style="flex:1;background:var(--accent-soft);height:20%;border-radius:4px 4px 0 0" title="Mon"></div>
+                <div class="week-bar" style="flex:1;background:var(--accent-soft);height:20%;border-radius:4px 4px 0 0" title="Tue"></div>
+                <div class="week-bar" style="flex:1;background:var(--accent-soft);height:20%;border-radius:4px 4px 0 0" title="Wed"></div>
+                <div class="week-bar" style="flex:1;background:var(--accent-soft);height:20%;border-radius:4px 4px 0 0" title="Thu"></div>
+                <div class="week-bar" style="flex:1;background:var(--accent-soft);height:20%;border-radius:4px 4px 0 0" title="Fri"></div>
+                <div class="week-bar" style="flex:1;background:var(--accent-soft);height:20%;border-radius:4px 4px 0 0" title="Sat"></div>
+                <div class="week-bar" style="flex:1;background:var(--accent);height:20%;border-radius:4px 4px 0 0;box-shadow:0 0 10px var(--accent-glow)" title="Sun"></div>
+              </div>
+              <div class="text-xs text-muted" style="display:flex;justify-content:space-between;margin-top:0.45rem">
+                <span>Mon</span><span>Sun</span>
+              </div>
+            </div>
+
+            <div class="glass-card" style="padding:1.25rem">
+              <h3 style="margin-bottom:0.75rem">Your skills</h3>
+              <div id="skills-summary"></div>
+            </div>
+
+            <div class="glass-card" style="padding:1.25rem">
+              <h3 style="margin-bottom:0.75rem">Quick actions</h3>
+              <div style="display:flex;flex-direction:column;gap:0.45rem">
+                <button class="btn btn-outline w-full" onclick="navigate('focus')">Open Focus Engine</button>
+                <button class="btn btn-outline w-full" onclick="openSearch()">Find developers</button>
+                <button class="btn btn-ghost w-full" onclick="simulateFriendRequest()">Demo: Friend request</button>
+                <button class="btn btn-ghost w-full" onclick="simulateIncomingMessage()">Demo: New message</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasks -->
+      <div class="page-content page-view hidden" id="page-tasks">
+        <div class="section-header">
+          <h1>Tasks</h1>
+          <button class="btn btn-primary btn-sm" id="btn-new-task" onclick="openCreateTask()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            New Task
+          </button>
+        </div>
+        <div id="all-tasks-container"></div>
+      </div>
+
+      <!-- Focus -->
+      <div class="page-content page-view hidden" id="page-focus">
+        <div id="timer-empty" class="timer-container">
+          <p class="text-secondary text-sm" style="margin-bottom:1.25rem">Free focus session</p>
+          <div class="duration-box">
+            <input type="number" id="free-duration" class="duration-input" min="1" max="999" value="25" placeholder="25" />
+            <div class="duration-sep"></div>
+            <select id="free-duration-unit" class="duration-unit">
+              <option value="min">دقيقة</option>
+              <option value="hour">ساعة</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="startFreeTimerFromInput()">Start</button>
+          </div>
+          <p class="text-xs text-muted" style="margin-top:1rem;text-align:center">اكتب المدة واختر دقيقة أو ساعة</p>
+        </div>
+
+        <div id="timer-active" class="timer-container hidden">
+          <p class="text-secondary text-sm" style="margin-bottom:0.4rem" id="timer-task-title"></p>
+          <div class="timer-ring-wrapper">
+            <svg class="timer-ring" width="260" height="260" viewBox="0 0 280 280">
+              <defs>
+                <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#6366F1"/>
+                  <stop offset="100%" stop-color="#A78BFA"/>
+                </linearGradient>
+              </defs>
+              <circle class="timer-ring-bg" cx="140" cy="140" r="120"/>
+              <circle class="timer-ring-progress" id="timer-progress" cx="140" cy="140" r="120" stroke-dasharray="753.98" stroke-dashoffset="0"/>
+            </svg>
+            <div class="timer-center">
+              <div class="timer-time" id="timer-time">90:00</div>
+              <div class="timer-mode">Deep Work</div>
+            </div>
+          </div>
+          <div class="timer-controls">
+            <button class="btn btn-primary btn-lg" onclick="pauseTimer()">Pause</button>
+            <button class="btn btn-outline" onclick="logDistraction()">Log Distraction</button>
+            <button class="btn btn-outline" onclick="completeSession()">Complete</button>
+            <button class="btn btn-ghost" id="btn-zen" onclick="toggleFocusMode()">Zen Mode</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics -->
+      <div class="page-content page-view hidden" id="page-analytics">
+        <div class="section-header">
+          <div>
+            <h1>Analytics</h1>
+            <p class="text-secondary text-sm" style="margin-top:0.2rem">Focus and completion trends</p>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="glass-card chart-card">
+            <div class="chart-header">
+              <h3>Focus activity</h3>
+              <span class="text-xs text-muted" id="chart-focus-summary">0 sessions</span>
+            </div>
+            <div class="chart-body">
+              <svg class="chart-svg" id="chart-focus" viewBox="0 0 400 160" preserveAspectRatio="none"></svg>
+            </div>
+          </div>
+
+          <div class="glass-card chart-card">
+            <div class="chart-header">
+              <h3>Tasks completed</h3>
+              <span class="text-xs text-muted" id="chart-tasks-summary">0 total</span>
+            </div>
+            <div class="chart-body">
+              <svg class="chart-svg" id="chart-tasks" viewBox="0 0 400 160" preserveAspectRatio="none"></svg>
+            </div>
+          </div>
+
+          <div class="glass-card chart-card chart-wide">
+            <div class="chart-header">
+              <h3>Weekly deep work</h3>
+              <span class="text-xs text-muted" id="chart-week-summary">minutes per day</span>
+            </div>
+            <div class="chart-body chart-body-tall">
+              <svg class="chart-svg" id="chart-week" viewBox="0 0 560 180" preserveAspectRatio="none"></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card" style="padding:1.35rem;margin-top:1rem">
+          <h3 style="margin-bottom:1rem">Contribution heatmap</h3>
+          <div class="heatmap" id="heatmap"></div>
+          <p class="text-xs text-muted" style="margin-top:0.75rem">Complete tasks to fill your heatmap</p>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="page-view hidden" id="page-messages" style="padding:0">
+        <div class="empty-state" style="min-height:calc(100vh - 60px);display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="52" height="52" style="opacity:0.35;margin-bottom:1rem"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <h3>No conversations yet</h3>
+          <p class="text-sm" style="margin-top:0.3rem">Search for developers and start a chat</p>
+          <button class="btn btn-outline btn-sm" style="margin-top:1rem" onclick="openSearch()">Find developers</button>
+        </div>
+      </div>
+
+      <!-- Profile -->
+      <div class="page-content page-view hidden" id="page-profile">
+        <div class="glass-card profile-header">
+          <img class="profile-avatar-lg" id="profile-avatar" src="" alt="" />
+          <div style="flex:1">
+            <h1 id="profile-name">—</h1>
+            <p class="text-accent" id="profile-handle">@—</p>
+            <p class="text-secondary text-sm" style="margin-top:0.6rem">Your public profile</p>
+            <div class="profile-actions">
+              <button class="btn btn-outline btn-sm" onclick="logout()">Sign out</button>
+            </div>
+          </div>
+        </div>
+        <div class="profile-stats">
+          <div class="glass-card stat-card"><div class="stat-value" id="stat-completed">0</div><div class="stat-label">Tasks Done</div></div>
+          <div class="glass-card stat-card"><div class="stat-value coin-value">0</div><div class="stat-label">Coins</div></div>
+          <div class="glass-card stat-card"><div class="stat-value">0h</div><div class="stat-label">Deep Work</div></div>
+          <div class="glass-card stat-card"><div class="stat-value">—</div><div class="stat-label">On-Time</div></div>
+        </div>
+
+        <div class="glass-card" style="padding:1.35rem;margin-bottom:1.25rem">
+          <div class="section-header"><h3>Certificates & proofs</h3></div>
+          <div class="cert-list" id="cert-list" style="margin-bottom:1rem"></div>
+          <form id="form-cert" onsubmit="addCertificate(event)">
+            <div style="display:grid;grid-template-columns:1fr 1fr 100px;gap:0.5rem;margin-bottom:0.6rem">
+              <input class="form-input" id="cert-title" placeholder="Certificate title" required />
+              <input class="form-input" id="cert-issuer" placeholder="Issuer" />
+              <input class="form-input" id="cert-year" placeholder="Year" />
+            </div>
+            <button type="submit" class="btn btn-outline btn-sm">Add certificate</button>
+          </form>
+        </div>
+
+        <div class="glass-card" style="padding:1.35rem">
+          <h3 style="margin-bottom:0.75rem">Preferences</h3>
+          <label class="text-sm" style="display:flex;align-items:center;gap:0.6rem;cursor:pointer">
+            <input type="checkbox" id="pref-terminal" onchange="toggleTerminalPref(this.checked)" />
+            Enable terminal command bar (optional)
+          </label>
+          <p class="text-xs text-muted" style="margin-top:0.4rem">Commands: add, start, done, focus, coins, help</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div class="modal-overlay" id="modal-auth">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Sign in to DevFlow</h2>
+        <button class="icon-btn" style="width:32px;height:32px;border:none;background:transparent" onclick="closeModal('modal-auth')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <button class="oauth-btn" onclick="startGoogleSignup()">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+        <div class="auth-divider">or</div>
+        <form onsubmit="event.preventDefault(); startGoogleSignup(document.getElementById('auth-name').value);">
+          <div class="form-group">
+            <label class="form-label">Display name (optional)</label>
+            <input class="form-input" id="auth-name" placeholder="Your name" />
+          </div>
+          <button type="submit" class="btn btn-primary w-full">Continue</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Task Modal -->
+  <div class="modal-overlay" id="modal-create-task">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Schedule Task</h2>
+        <button class="icon-btn" style="width:32px;height:32px;border:none;background:transparent" onclick="closeModal('modal-create-task')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="form-create-task" onsubmit="submitCreateTask(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Title</label>
+            <input class="form-input" id="task-title" placeholder="e.g. Refactor auth middleware" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Start date & time</label>
+            <input class="form-input" id="task-datetime" type="datetime-local" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Estimated minutes</label>
+            <input class="form-input" id="task-estimated" type="number" value="60" min="5" max="480" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tech tags (optional)</label>
+            <input class="form-input" id="task-tech" placeholder="React, TypeScript" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Projects inside this task (comma separated)</label>
+            <input class="form-input" id="task-projects" placeholder="Auth API, Dashboard UI, Tests" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" onclick="closeModal('modal-create-task')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Schedule</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Search Modal -->
+  <div class="modal-overlay search-modal" id="modal-search">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Find developers</h2>
+        <button class="icon-btn" style="width:32px;height:32px;border:none;background:transparent" onclick="closeModal('modal-search')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="search-input-wrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input class="search-input" id="search-input" placeholder="Search by @handle or name..." oninput="handleSearchInput(event)" />
+        </div>
+        <div id="search-results"></div>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- Username after Google -->
+  <div class="modal-overlay" id="modal-username">
+    <div class="modal" style="max-width:400px">
+      <div class="modal-header"><h2>Choose your username</h2></div>
+      <div class="modal-body">
+        <p class="text-sm text-secondary" style="margin-bottom:1rem">This is how others will find you on DevFlow — not your email.</p>
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <div style="display:flex;align-items:center;gap:0.35rem">
+            <span class="text-muted">@</span>
+            <input class="form-input" id="setup-username" placeholder="alexdev" maxlength="24" />
+          </div>
+          <p class="text-xs text-muted" style="margin-top:0.35rem">Letters, numbers, underscore only</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Display name</label>
+          <input class="form-input" id="setup-displayname" placeholder="Alex Rivera" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary w-full" onclick="submitUsername()">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Choose avatar -->
+  <div class="modal-overlay" id="modal-avatar">
+    <div class="modal" style="max-width:380px">
+      <div class="modal-header"><h2>Choose avatar</h2></div>
+      <div class="modal-body" style="text-align:center">
+        <p class="text-sm text-secondary" style="margin-bottom:1.25rem">Pick a profile photo</p>
+        <div class="avatar-picker" onclick="document.getElementById('avatar-file').click()">
+          <img id="avatar-preview" class="avatar-picker-img" alt="" style="display:none" />
+          <div id="avatar-placeholder" class="avatar-picker-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="avatar-picker-plus">+</div>
+        </div>
+        <input type="file" id="avatar-file" accept="image/*" hidden onchange="onAvatarSelected(event)" />
+        <p class="text-xs text-muted" style="margin-top:0.85rem">Click the circle or + to upload</p>
+      </div>
+      <div class="modal-footer" style="justify-content:space-between">
+        <button type="button" class="btn btn-ghost" onclick="skipAvatar()">Skip</button>
+        <button type="button" class="btn btn-primary" onclick="confirmAvatar()">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Onboarding -->
+  <div class="modal-overlay" id="modal-onboarding">
+    <div class="modal" style="max-width:560px">
+      <div class="modal-header">
+        <h2>What do you know & want to learn?</h2>
+      </div>
+      <div class="modal-body">
+        <p class="text-sm text-secondary" style="margin-bottom:1rem">We'll turn learning goals into tasks. Complete them to earn coins.</p>
+        <div class="form-group">
+          <label class="form-label">I already know</label>
+          <div class="skill-grid" id="skills-learned"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">I want to learn</label>
+          <div class="skill-grid" id="skills-learning"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('modal-onboarding'); localStorage.setItem('devflow_onboarding','true');">Skip</button>
+        <button type="button" class="btn btn-primary" onclick="submitOnboarding()">Save goals</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mini timer PiP -->
+  <div class="mini-timer" id="mini-timer" onclick="navigate('focus')">
+    <div>
+      <div class="mini-timer-time" id="mini-timer-time">00:00</div>
+      <div class="mini-timer-title" id="mini-timer-title">Focus</div>
+    </div>
+    <button class="btn btn-sm btn-outline" onclick="event.stopPropagation();navigate('focus')">Open</button>
+  </div>
+
+  <!-- Terminal bar -->
+  <div class="terminal-bar" id="terminal-bar">
+    <span class="terminal-prompt">devflow&gt;</span>
+    <input class="terminal-input" id="terminal-input" placeholder="add Refactor auth | start | done | help" onkeydown="if(event.key==='Enter') runTerminalCommand(this.value)" />
+    <span class="terminal-hint">optional</span>
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+  <script src="js/app.js"></script>
+</body>
+</html>
