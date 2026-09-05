@@ -91,14 +91,40 @@ function showApp(){
 }
 
 function startGoogleSignup(optionalName) {
-  closeModal('modal-auth');
-  pendingSignup = { displayName: (optionalName || '').trim(), handle: '', avatar: '' };
-  pendingAvatarData = '';
-  if (pendingSignup.displayName) {
-    document.getElementById('setup-displayname').value = pendingSignup.displayName;
+  if (!window.firebase || !firebase.apps || !firebase.apps.length) {
+    showToast('Firebase not configured', 'Fill js/firebase-config.js first');
+    return;
   }
-  openModal('modal-username');
-  setTimeout(() => document.getElementById('setup-username')?.focus(), 100);
+  const provider = new firebase.auth.GoogleAuthProvider();
+  firebase.auth().signInWithPopup(provider).then(result => {
+    const user = result.user;
+    pendingSignup = {
+      displayName: (optionalName || user.displayName || '').trim(),
+      handle: '',
+      avatar: user.photoURL || '',
+      uid: user.uid,
+      email: user.email || ''
+    };
+    pendingAvatarData = user.photoURL || '';
+    closeModal('modal-auth');
+    // if profile already exists, skip username
+    return firebase.firestore().collection('users').doc(user.uid).get().then(doc => {
+      if (doc.exists && doc.data().handle) {
+        const d = doc.data();
+        login(d.displayName, d.handle, d.avatar || user.photoURL, user.uid);
+        return;
+      }
+      if (pendingSignup.displayName) {
+        const el = document.getElementById('setup-displayname');
+        if (el) el.value = pendingSignup.displayName;
+      }
+      openModal('modal-username');
+      setTimeout(() => document.getElementById('setup-username')?.focus(), 100);
+    });
+  }).catch(err => {
+    console.error(err);
+    showToast('Google sign-in failed', err.message || 'Try again');
+  });
 }
 
 function submitUsername() {
@@ -151,7 +177,22 @@ function confirmAvatar() {
 function finishSignup() {
   closeModal('modal-avatar');
   const avatar = pendingAvatarData || ('https://api.dicebear.com/7.x/avataaars/svg?seed=' + encodeURIComponent(pendingSignup.handle || 'dev') + '&backgroundColor=09090b');
-  login(pendingSignup.displayName, pendingSignup.handle, avatar);
+  const uid = pendingSignup.uid || (firebase.auth().currentUser && firebase.auth().currentUser.uid);
+  const doLogin = () => login(pendingSignup.displayName, pendingSignup.handle, avatar, uid);
+  if (window.firebase && firebase.apps.length && uid) {
+    firebase.firestore().collection('users').doc(uid).set({
+      handle: pendingSignup.handle.toLowerCase(),
+      displayName: pendingSignup.displayName,
+      avatar: avatar,
+      email: pendingSignup.email || '',
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).then(doLogin).catch(err => {
+      showToast('Profile save failed', err.message || '');
+      doLogin();
+    });
+  } else {
+    doLogin();
+  }
 }
 
 
@@ -167,9 +208,10 @@ function enterGuest(){
     }
   }, 3000);
 }
-function login(name, handle, avatarUrl){
+function login(name, handle, avatarUrl, uid){
   isLoggedIn = true;
   currentUser = {
+    uid: uid || null,
     displayName: name || 'Developer',
     handle: handle || 'developer',
     avatar: avatarUrl || ('https://api.dicebear.com/7.x/avataaars/svg?seed='+encodeURIComponent(handle||name||'dev')+'&backgroundColor=09090b')
@@ -179,6 +221,7 @@ function login(name, handle, avatarUrl){
   updateUserUI();
   showApp();
   showToast('Welcome', 'Signed in as @'+currentUser.handle);
+  if (typeof startChatEngine === 'function') startChatEngine();
 }
 function logout(){
   isLoggedIn = false;
@@ -582,10 +625,35 @@ function openSearch(){
   setTimeout(()=>document.getElementById('search-input')?.focus(),80);
 }
 function handleSearchInput(e){
-  const q=e.target.value.trim();
+  const q=e.target.value.trim().replace(/^@/,'');
   const c=document.getElementById('search-results');
   if(!q){ c.innerHTML='<div class="empty-state" style="padding:2rem 1rem"><p class="text-sm">Type a name or @handle</p></div>'; return; }
-  c.innerHTML='<div class="empty-state" style="padding:2rem 1rem"><p class="text-sm">No results for "'+q+'"</p></div>';
+  if (!window.firebase || !firebase.apps.length) {
+    c.innerHTML='<div class="empty-state" style="padding:2rem 1rem"><p class="text-sm">Configure Firebase to search users</p></div>';
+    return;
+  }
+  c.innerHTML='<div class="empty-state" style="padding:2rem 1rem"><p class="text-sm">Searching...</p></div>';
+  const handle = q.toLowerCase();
+  firebase.firestore().collection('users').where('handle', '>=', handle).where('handle', '<=', handle + '\uf8ff').limit(10).get()
+    .then(snap => {
+      if (snap.empty) {
+        c.innerHTML='<div class="empty-state" style="padding:2rem 1rem"><p class="text-sm">No results for "'+q+'"</p></div>';
+        return;
+      }
+      c.innerHTML = snap.docs.map(doc => {
+        const u = doc.data();
+        return `<div class="user-result" onclick="openChatWith('${u.handle}'); closeModal('modal-search'); navigate('messages');">
+          <img class="avatar" src="${u.avatar || ''}" alt="" />
+          <div class="user-result-info">
+            <div class="user-result-name">${u.displayName || u.handle}</div>
+            <div class="user-result-handle">@${u.handle}</div>
+          </div>
+          <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); openChatWith('${u.handle}'); closeModal('modal-search'); navigate('messages');">Message</button>
+        </div>`;
+      }).join('');
+    }).catch(err => {
+      c.innerHTML='<div class="empty-state" style="padding:2rem 1rem"><p class="text-sm">Search error</p><p class="text-xs text-muted">'+err.message+'</p></div>';
+    });
 }
 function renderMessagesEmpty(){}
 
