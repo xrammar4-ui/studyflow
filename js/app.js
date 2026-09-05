@@ -87,6 +87,7 @@ function showApp(){
   applyTerminalPref();
   navigate('dashboard');
   maybeShowOnboarding();
+  if(typeof startChatEngine==='function') startChatEngine();
 }
 
 function startGoogleSignup(optionalName) {
@@ -273,7 +274,7 @@ function navigate(page){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.querySelector('[data-nav="'+page+'"]')?.classList.add('active');
   if(page==='focus') initTimerUI();
-  if(page==='messages'){ renderMessagesEmpty(); setUnreadChats(0); }
+  if(page==='messages'){ if(typeof renderMessagesPage==='function') renderMessagesPage(); setUnreadChats(0); if(activePeerHandle) markIncomingRead(activePeerHandle); }
   if(page==='analytics'){ renderAnalyticsEmpty(); renderAnalyticsCharts(); }
   
   updateMiniTimer();
