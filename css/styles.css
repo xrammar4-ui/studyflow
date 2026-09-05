@@ -1257,3 +1257,58 @@ h3 { font-size: 1.05rem; }
 .avatar-picker:hover .avatar-picker-plus {
   transform: scale(1.08);
 }
+
+.chat-list-header {
+  padding: 1rem 1.15rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.wa-messages {
+  background: #0B0B0F;
+  gap: 0.35rem !important;
+  padding: 1rem 1.1rem !important;
+}
+.wa-bubble {
+  max-width: 75%;
+  padding: 0.45rem 0.65rem 0.35rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  position: relative;
+  word-wrap: break-word;
+}
+.wa-bubble.sent {
+  align-self: flex-end;
+  background: #005C4B;
+  color: #E9EDEF;
+  border-bottom-right-radius: 3px;
+}
+.wa-bubble.received {
+  align-self: flex-start;
+  background: #1F1F23;
+  color: #E9EDEF;
+  border-bottom-left-radius: 3px;
+}
+.wa-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.3rem;
+  margin-top: 0.2rem;
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.45);
+}
+.wa-bubble.received .wa-meta { justify-content: flex-start; }
+.wa-ticks {
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: -0.15em;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+.wa-ticks.sent { color: rgba(255,255,255,0.45); }
+.wa-ticks.delivered { color: rgba(255,255,255,0.45); }
+.wa-ticks.read { color: #53BDEB; }
+.chat-peer-online { color: #22C55E !important; }
+.chat-peer-offline { color: var(--text-muted) !important; }
